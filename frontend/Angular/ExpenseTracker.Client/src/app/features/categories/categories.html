@@ -1,0 +1,213 @@
+<div class="categories-page">
+  <div class="page-header">
+    <div>
+      <h1>Categories</h1>
+      <p>Organize and track your financial buckets</p>
+    </div>
+
+    <button class="btn btn-primary" type="button" (click)="resetForm()">
+      <i class="bi bi-plus-lg me-2"></i>
+      Add Category
+    </button>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div>
+        <span>Expense Categories</span>
+        <h2>{{ summary?.expenseCategoriesCount || 0 }}</h2>
+      </div>
+
+      <div class="summary-icon expense">
+        <i class="bi bi-graph-down-arrow"></i>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div>
+        <span>Income Categories</span>
+        <h2>{{ summary?.incomeCategoriesCount || 0 }}</h2>
+      </div>
+
+      <div class="summary-icon income">
+        <i class="bi bi-graph-up-arrow"></i>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div class="content-grid">
+    <div class="form-card">
+      <h3>{{ selectedCategoryId ? 'Edit Category' : 'New Category' }}</h3>
+
+      <form [formGroup]="categoryForm" (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label class="form-label">Category Name</label>
+          <input
+            class="form-control"
+            placeholder="e.g. Entertainment"
+            formControlName="name"
+          />
+
+          <small class="text-danger" *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid">
+            Category name is required
+          </small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Type</label>
+          <select class="form-select" formControlName="type">
+            <option [value]="2">Expense</option>
+            <option [value]="1">Income</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="col-6 mb-3">
+            <label class="form-label">Icon</label>
+            <select class="form-select" formControlName="icon">
+              <option value="utensils">Food</option>
+              <option value="bus">Transport</option>
+              <option value="wallet">Wallet</option>
+              <option value="briefcase">Briefcase</option>
+              <option value="bag">Shopping</option>
+              <option value="receipt">Receipt</option>
+              <option value="tag">Tag</option>
+            </select>
+          </div>
+
+          <div class="col-6 mb-3">
+            <label class="form-label">Color</label>
+            <input type="color" class="form-control form-control-color" formControlName="color" />
+          </div>
+        </div>
+
+        <button class="btn btn-primary w-100 save-btn" type="submit" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : selectedCategoryId ? 'Update Category' : 'Save Category' }}
+        </button>
+
+        <button
+          *ngIf="selectedCategoryId"
+          class="btn btn-light w-100 mt-2"
+          type="button"
+          (click)="resetForm()"
+        >
+          Cancel Edit
+        </button>
+      </form>
+
+      <div class="tip-box">
+        <i class="bi bi-lightbulb"></i>
+        <p>Grouping categories into main buckets helps in better reporting efficiency.</p>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <h3>Manage Categories</h3>
+
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            placeholder="Search..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="search()"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="isLoading" class="loading">
+        Loading categories...
+      </div>
+
+      <div class="table-responsive" *ngIf="!isLoading">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Usage</th>
+              <th>Total Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let category of categories">
+              <td>
+                <div class="category-info">
+                  <div
+                    class="category-icon"
+                    [style.background]="category.color || '#E5E7EB'"
+                  >
+                    <i class="bi" [ngClass]="getIconClass(category.icon)"></i>
+                  </div>
+
+                  <strong>{{ category.name }}</strong>
+                </div>
+              </td>
+
+              <td>
+                <span
+                  class="type-badge"
+                  [class.income]="category.type === 1"
+                  [class.expense]="category.type === 2"
+                >
+                  {{ getTypeName(category.type) }}
+                </span>
+              </td>
+
+              <td>
+                {{ category.transactionsCount }}
+                {{ category.transactionsCount === 1 ? 'transaction' : 'transactions' }}
+              </td>
+
+              <td>
+                <strong>{{ category.totalAmount | currency:'EGP':'symbol':'1.0-0' }}</strong>
+              </td>
+
+              <td>
+                
+                <button class="action-btn" type="button" (click)="edit(category); $event.stopPropagation()">
+                <i class="bi bi-pencil"></i>
+                </button>
+
+                <button class="action-btn delete" type="button" (click)="delete(category); $event.stopPropagation()">
+                <i class="bi bi-trash"></i>
+                </button>
+                </td>
+            </tr>
+
+            <tr *ngIf="categories.length === 0">
+              <td colspan="5" class="text-center text-muted py-4">
+                No categories found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="utilization-card">
+        <div class="mini-donut">
+          <strong>{{ summary?.utilizationPercentage || 0 }}%</strong>
+          <span class="used">Used</span>
+        </div>
+
+        <div>
+          <h4>Category Utilization</h4>
+          <p>
+            Most of your categories are used in transactions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

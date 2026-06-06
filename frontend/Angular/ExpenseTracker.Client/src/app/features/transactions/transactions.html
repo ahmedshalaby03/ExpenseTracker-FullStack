@@ -1,0 +1,240 @@
+<div class="transactions-page">
+  <div class="page-header">
+    <div>
+      <h1>Transactions</h1>
+      <p>Track and manage your income and expenses</p>
+    </div>
+
+    <button class="btn btn-primary" type="button" (click)="openAddForm()">
+      <i class="bi bi-plus-lg me-2"></i>
+      Add Transaction
+    </button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div class="form-card" *ngIf="showForm">
+    <div class="form-header">
+      <h3>{{ selectedTransactionId ? 'Edit Transaction' : 'Add Transaction' }}</h3>
+
+      <button class="close-btn" type="button" (click)="closeForm()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="transactionForm" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div>
+          <label class="form-label">Amount</label>
+          <input type="number" class="form-control" formControlName="amount" />
+        </div>
+
+        <div>
+          <label class="form-label">Type</label>
+          <select class="form-select" formControlName="type">
+            <option [value]="2">Expense</option>
+            <option [value]="1">Income</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Category</label>
+          <select class="form-select" formControlName="categoryId">
+            <option [ngValue]="null">Select Category</option>
+            <option *ngFor="let category of getFilteredCategories()" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Payment Method</label>
+          <select class="form-select" formControlName="paymentMethod">
+            <option [value]="1">Cash</option>
+            <option [value]="2">Card</option>
+            <option [value]="3">Wallet</option>
+            <option [value]="4">Bank Transfer</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" formControlName="transactionDate" />
+        </div>
+
+        <div>
+          <label class="form-label">Description</label>
+          <input type="text" class="form-control" formControlName="description" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-light" type="button" (click)="closeForm()">Cancel</button>
+        <button class="btn btn-primary" type="submit" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : 'Save Transaction' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="filter-card">
+    <div class="filter-grid">
+      <div>
+        <label>Search</label>
+        <input
+          class="form-control"
+          placeholder="Search transactions..."
+          [(ngModel)]="filter.search"
+        />
+      </div>
+
+      <div>
+        <label>From Date</label>
+        <input type="date" class="form-control" [(ngModel)]="filter.fromDate" />
+      </div>
+
+      <div>
+        <label>To Date</label>
+        <input type="date" class="form-control" [(ngModel)]="filter.toDate" />
+      </div>
+
+      <div>
+        <label>Type</label>
+        <select class="form-select" [(ngModel)]="filter.type">
+          <option [ngValue]="null">All</option>
+          <option [ngValue]="1">Income</option>
+          <option [ngValue]="2">Expense</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Category</label>
+        <select class="form-select" [(ngModel)]="filter.categoryId">
+          <option [ngValue]="null">All Categories</option>
+          <option *ngFor="let category of categories" [ngValue]="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label>Payment Method</label>
+        <select class="form-select" [(ngModel)]="filter.paymentMethod">
+          <option [ngValue]="null">All Methods</option>
+          <option [ngValue]="1">Cash</option>
+          <option [ngValue]="2">Card</option>
+          <option [ngValue]="3">Wallet</option>
+          <option [ngValue]="4">Bank Transfer</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" type="button" (click)="applyFilter()">
+        Apply Filter
+      </button>
+
+      <button class="btn btn-outline-secondary" type="button" (click)="resetFilter()">
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div *ngIf="isLoading" class="loading">
+      Loading transactions...
+    </div>
+
+    <div class="table-responsive" *ngIf="!isLoading">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th>Payment Method</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let transaction of transactions">
+            <td>{{ transaction.transactionDate | date:'MMM d, y' }}</td>
+
+            <td>{{ transaction.description || '-' }}</td>
+
+            <td>
+              <span class="category-pill">{{ transaction.categoryName }}</span>
+            </td>
+
+            <td>
+              <span
+                class="type-badge"
+                [class.income]="transaction.type === 1"
+                [class.expense]="transaction.type === 2"
+              >
+                {{ getTypeName(transaction.type) }}
+              </span>
+            </td>
+
+            <td>{{ getPaymentMethodName(transaction.paymentMethod) }}</td>
+
+            <td
+              class="amount"
+              [class.amount-income]="transaction.type === 1"
+              [class.amount-expense]="transaction.type === 2"
+            >
+              {{ transaction.type === 1 ? '+' : '-' }}
+              {{ transaction.amount | currency:'EGP':'symbol':'1.0-0' }}
+            </td>
+
+            <td>
+              <button class="action-btn" type="button" (click)="edit(transaction)">
+                <i class="bi bi-pencil"></i>
+              </button>
+
+              <button class="action-btn delete" type="button" (click)="delete(transaction)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="transactions.length === 0">
+            <td colspan="7" class="text-center text-muted py-4">
+              No transactions found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-row">
+      <span>
+        Showing {{ transactions.length }} of {{ totalCount }} entries
+      </span>
+
+      <div>
+        <button class="page-btn" type="button" (click)="previousPage()" [disabled]="pageNumber === 1">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <span class="current-page">{{ pageNumber }}</span>
+
+        <button
+          class="page-btn"
+          type="button"
+          (click)="nextPage()"
+          [disabled]="pageNumber * pageSize >= totalCount"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg-base: #070d1a;
+  --bg-deep: #050a14;
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.07);
+  --glass-active: rgba(99, 179, 255, 0.15);
+  --accent: #63b3ff;
+  --accent-glow: rgba(99, 179, 255, 0.3);
+  --accent-2: #34d399;
+  --accent-3: #f87171;
+  --text-primary: #e8f0fe;
+  --text-secondary: rgba(232, 240, 254, 0.5);
+  --text-muted: rgba(232, 240, 254, 0.3);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Bootstrap overrides ── */
+.table {
+  --bs-table-bg: transparent !important;
+  --bs-table-color: var(--text-secondary) !important;
+  --bs-table-border-color: rgba(255, 255, 255, 0.05) !important;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04) !important;
+  color: var(--text-secondary) !important;
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: var(--text-secondary) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.table thead th {
+  background: rgba(0, 0, 0, 0.3) !important;
+  color: var(--text-muted) !important;
+}
+
+.form-control,
+.form-select {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border-color: var(--glass-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: rgba(99, 179, 255, 0.05) !important;
+  border-color: rgba(99, 179, 255, 0.4) !important;
+  box-shadow: 0 0 0 3px rgba(99, 179, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+}
+
+.form-control::placeholder { color: var(--text-muted) !important; }
+
+.form-select option {
+  background: #0d1b35;
+  color: var(--text-primary);
+}
+
+.input-group-text {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border-color: var(--glass-border) !important;
+  color: var(--text-muted) !important;
+}
+
+.form-check-input {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--glass-border) !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.modal-content {
+  background: #0d1b35 !important;
+  border-color: var(--glass-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.progress {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.text-muted { color: var(--text-muted) !important; }
+
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+/* =============================================
+   EXPENSEFLOW — PERFECT SIDEBAR & MAIN AREA FIX
+   ============================================= */
+
+/* الحاوية الأب الكبرى للموقع */
+.app-layout {
+  display: flex !important; /* نضمن تشغيل الفليكس */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-base);
+  position: relative;
+}
+
+/* الـ Sidebar — تأكدنا من تثبيته وحجز مكانه */
+.sidebar {
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  height: 100vh;
+  background: var(--bg-deep);
+  border-right: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 16px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.main-area {
+  margin-left: 260px !important; /* بيزق الـ content كله برة منطقة السايدبار تماماً */
+  width: calc(100% - 260px) !important; /* بيضمن إن العرض ميزيدش عن المساحة المتبقية */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* الـ Topbar */
+.topbar {
+  height: 70px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(7, 13, 26, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+  width: 100%;
+}
+
+/* مساحة عرض المحتوى (الـ Dashboard) */
+.content-area {
+  flex: 1;
+  padding: 28px !important;
+  overflow-y: auto; /* السكرول هنا بس لو الصفحة طويلة */
+  box-sizing: border-box;
+  width: 100%;
+}

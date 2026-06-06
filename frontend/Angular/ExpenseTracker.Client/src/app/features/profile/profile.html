@@ -1,0 +1,213 @@
+<div class="profile-page">
+  <div class="page-header">
+    <div>
+      <h1>Profile</h1>
+      <p>Manage your personal information and preferences</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-card">
+    Loading profile...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <ng-container *ngIf="!isLoading && profile">
+    <div class="profile-hero">
+     
+
+      <div class="avatar-wrapper">
+  <div class="avatar" *ngIf="!getAvatarFullUrl()">
+    {{ getInitials() }}
+  </div>
+
+  <img
+    *ngIf="getAvatarFullUrl()"
+    [src]="getAvatarFullUrl()!"
+    alt="Profile avatar"
+    class="avatar-img"
+  />
+
+  <label class="edit-avatar">
+    <i class="bi bi-pencil-fill"></i>
+    <input
+      type="file"
+      accept="image/png,image/jpeg,image/webp"
+      hidden
+      (change)="onAvatarSelected($event)"
+    />
+  </label>
+</div>
+
+      <div class="profile-main-info">
+        <h2>{{ profile.fullName }}</h2>
+        <p>{{ profile.email }}</p>
+
+        <div class="badges">
+          <span class="member-badge">
+            <i class="bi bi-check-circle-fill"></i>
+            Member since {{ getMemberSince() | date:'MMMM yyyy' }}
+          </span>
+
+          <span class="premium-badge">
+            Premium Account
+          </span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary save-profile-btn" type="button" (click)="saveProfile()" [disabled]="isSavingProfile">
+        {{ isSavingProfile ? 'Saving...' : 'Save Profile' }}
+      </button>
+    </div>
+
+    <div class="profile-grid">
+      <div class="settings-card">
+        <h3>
+          <i class="bi bi-person me-2"></i>
+          Personal Information
+        </h3>
+
+        <form [formGroup]="profileForm">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input class="form-control" formControlName="fullName" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input class="form-control" [value]="profile.email" disabled />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Preferred Currency</label>
+            <select class="form-select" formControlName="preferredCurrency">
+              <option value="EGP">EGP - Egyptian Pound</option>
+              <option value="USD">USD - US Dollar</option>
+              <option value="EUR">EUR - Euro</option>
+              <option value="SAR">SAR - Saudi Riyal</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="settings-card">
+        <h3>
+          <i class="bi bi-sliders me-2"></i>
+          Preferences
+        </h3>
+
+        <form [formGroup]="preferencesForm">
+          <div class="mb-3">
+            <label class="form-label">Default Payment Method</label>
+            <select class="form-select" formControlName="defaultPaymentMethod">
+              <option value="Cash">Cash</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Wallet">Wallet</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Monthly Budget Limit</label>
+            <div class="input-group">
+              <input type="number" class="form-control" formControlName="monthlyBudgetLimit" />
+              <span class="input-group-text">EGP</span>
+            </div>
+          </div>
+
+          <div class="notifications">
+            <label class="section-label">Notifications</label>
+
+            <div class="toggle-row">
+              <span>Email Notifications</span>
+              <input type="checkbox" class="form-check-input" formControlName="emailNotifications" />
+            </div>
+
+            <div class="toggle-row">
+              <span>Push Notifications</span>
+              <input type="checkbox" class="form-check-input" formControlName="pushNotifications" />
+            </div>
+
+            <div class="toggle-row">
+              <span>SMS Alerts</span>
+              <input type="checkbox" class="form-check-input" formControlName="smsAlerts" />
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100 mt-3" type="button" (click)="savePreferences()" [disabled]="isSavingPreferences">
+            {{ isSavingPreferences ? 'Saving...' : 'Save Preferences' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="security-card">
+      <div class="security-left">
+        <h3>
+          <i class="bi bi-shield me-2"></i>
+          Security & Access
+        </h3>
+
+        <p>
+          Manage your account password and active sessions across all your devices.
+        </p>
+
+        <form [formGroup]="passwordForm" class="password-form">
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Current password"
+            formControlName="currentPassword"
+          />
+
+          <input
+            type="password"
+            class="form-control"
+            placeholder="New password"
+            formControlName="newPassword"
+          />
+
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Confirm new password"
+            formControlName="confirmNewPassword"
+          />
+
+          <div class="security-actions">
+            <button class="btn btn-outline-primary" type="button" (click)="changePassword()" [disabled]="isChangingPassword">
+              <i class="bi bi-lock me-2"></i>
+              {{ isChangingPassword ? 'Changing...' : 'Change Password' }}
+            </button>
+
+            <button class="btn btn-outline-danger" type="button" disabled>
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Logout from all devices
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="security-score-box">
+        <div class="score-header">
+          <i class="bi bi-info-circle"></i>
+          <strong>Account Security Score: {{ profile.securityScore }}%</strong>
+        </div>
+
+        <div class="score-progress">
+          <div class="score-fill" [style.width.%]="profile.securityScore"></div>
+        </div>
+
+        <p>
+          Add a phone number or enable two-factor authentication to improve account security.
+        </p>
+      </div>
+    </div>
+  </ng-container>
+</div>

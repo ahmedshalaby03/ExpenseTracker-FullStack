@@ -1,0 +1,215 @@
+<div class="reports-page">
+  <div class="page-header">
+    <div>
+      <h1>Reports</h1>
+      <p>Analyze your income, expenses, and spending behavior</p>
+    </div>
+
+    <div class="export-actions">
+      <button class="btn btn-outline-secondary" type="button" (click)="exportPdf()">
+        <i class="bi bi-file-earmark-pdf me-2"></i>
+        Export PDF
+      </button>
+
+      <button class="btn btn-primary" type="button" (click)="exportExcel()">
+        <i class="bi bi-file-earmark-excel me-2"></i>
+        Export Excel
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-card">
+    <span>Filter by:</span>
+
+    <select [(ngModel)]="selectedMonth" (change)="onFilterChange()" class="form-select">
+      <option *ngFor="let month of months" [ngValue]="month.value">
+        {{ month.name }}
+      </option>
+    </select>
+
+    <select [(ngModel)]="selectedYear" (change)="onFilterChange()" class="form-select">
+      <option *ngFor="let year of years" [ngValue]="year">
+        {{ year }}
+      </option>
+    </select>
+
+    <small>Last updated: today</small>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading-card">
+    Loading reports...
+  </div>
+
+  <ng-container *ngIf="!isLoading && summary">
+    <div class="summary-grid">
+      <div class="summary-card income">
+        <div class="icon-box">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <span>Monthly Income</span>
+        <h2>{{ summary.monthlyIncome | currency:'EGP':'symbol':'1.0-0' }}</h2>
+      </div>
+
+      <div class="summary-card expense">
+        <div class="icon-box">
+          <i class="bi bi-graph-down-arrow"></i>
+        </div>
+        <span>Monthly Expense</span>
+        <h2>{{ summary.monthlyExpenses | currency:'EGP':'symbol':'1.0-0' }}</h2>
+      </div>
+
+      <div class="summary-card balance">
+        <div class="icon-box">
+          <i class="bi bi-bank"></i>
+        </div>
+        <span>Monthly Balance</span>
+        <h2>{{ summary.monthlyBalance | currency:'EGP':'symbol':'1.0-0' }}</h2>
+      </div>
+
+      <div class="summary-card top">
+        <div class="icon-box">
+          <i class="bi bi-cup-hot"></i>
+        </div>
+        <span>Top Category</span>
+        <h3>{{ summary.topCategoryName || 'No Data' }}</h3>
+        <p>{{ summary.topCategoryAmount | currency:'EGP':'symbol':'1.0-0' }} spent</p>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-icon">
+        <i class="bi bi-lightbulb-fill"></i>
+      </div>
+      <p>{{ summary.insightMessage }}</p>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="card-header-row">
+          <h3>Income vs Expenses</h3>
+          <div class="legend">
+            <span><b class="dot income-dot"></b> Income</span>
+            <span><b class="dot expense-dot"></b> Expenses</span>
+          </div>
+        </div>
+
+        <div class="bar-chart" *ngIf="incomeVsExpenses.length > 0; else noIncomeExpenseData">
+          <div class="month-group" *ngFor="let item of incomeVsExpenses">
+            <div class="bars">
+              <div class="bar income-bar" [style.height.%]="getIncomeBarHeight(item.income)"></div>
+              <div class="bar expense-bar" [style.height.%]="getExpenseBarHeight(item.expenses)"></div>
+            </div>
+            <span>{{ getMonthName(item.month) }}</span>
+          </div>
+        </div>
+
+        <ng-template #noIncomeExpenseData>
+          <div class="empty-box">No chart data available</div>
+        </ng-template>
+      </div>
+
+      <div class="chart-card">
+        <h3>Expenses By Category</h3>
+
+        <div class="donut">
+          <div>
+            <strong>{{ getTotalCategorySpent() | currency:'EGP':'symbol':'1.0-0' }}</strong>
+            <span>Total</span>
+          </div>
+        </div>
+
+        <div class="category-list">
+          <div *ngFor="let item of categoryBreakdown">
+            <span>{{ item.categoryName }}</span>
+            <strong>{{ item.percentage }}%</strong>
+          </div>
+
+          <div *ngIf="categoryBreakdown.length === 0" class="text-muted">
+            No category data available
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="card-header-row">
+        <h3>Daily Spending Fluctuations</h3>
+        <div class="small-tabs">
+          <button>Day</button>
+          <button>Week</button>
+          <button>Month</button>
+        </div>
+      </div>
+
+      <div class="daily-chart" *ngIf="dailySpending.length > 0; else noDailyData">
+        <div class="daily-item" *ngFor="let item of dailySpending">
+          <div class="daily-bar" [style.height.%]="getDailyBarHeight(item.totalSpent)"></div>
+          <span>{{ item.date | date:'MMM d' }}</span>
+        </div>
+      </div>
+
+      <ng-template #noDailyData>
+        <div class="empty-box">No daily spending data available</div>
+      </ng-template>
+    </div>
+
+    <div class="table-card">
+      <div class="card-header-row">
+        <h3>Category Breakdown</h3>
+        <a href="#">View All Details</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Total Spent</th>
+              <th>Percentage</th>
+              <th>Transactions</th>
+              <th>Trend</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of categoryBreakdown">
+              <td>
+                <strong>{{ item.categoryName }}</strong>
+              </td>
+
+              <td>{{ item.totalSpent | currency:'EGP':'symbol':'1.0-0' }}</td>
+
+              <td>
+                <div class="percentage-cell">
+                  <div class="progress">
+                    <div class="progress-bar" [style.width.%]="item.percentage"></div>
+                  </div>
+                  <span>{{ item.percentage }}%</span>
+                </div>
+              </td>
+
+              <td>
+                {{ item.transactionsCount }}
+                {{ item.transactionsCount === 1 ? 'transaction' : 'transactions' }}
+              </td>
+
+              <td>
+                <span class="trend-up">↗ +{{ item.percentage }}%</span>
+              </td>
+            </tr>
+
+            <tr *ngIf="categoryBreakdown.length === 0">
+              <td colspan="5" class="text-center text-muted py-4">
+                No category breakdown found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

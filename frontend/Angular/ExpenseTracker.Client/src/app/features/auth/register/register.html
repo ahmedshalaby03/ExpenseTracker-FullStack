@@ -1,0 +1,93 @@
+<div class="register-page">
+  <div class="register-card">
+    <div class="logo-box">$</div>
+
+    <h2>Create your account</h2>
+    <p class="subtitle">Start tracking your income and expenses today</p>
+
+    <div *ngIf="errorMessages.length" class="alert alert-danger py-2">
+      <div *ngFor="let error of errorMessages">{{ error }}</div>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label class="form-label">FULL NAME</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="John Doe"
+          formControlName="fullName"
+        />
+        <small class="text-danger" *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.invalid">
+          Full name is required
+        </small>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">EMAIL ADDRESS</label>
+        <input
+          type="email"
+          class="form-control"
+          placeholder="name@company.com"
+          formControlName="email"
+        />
+        <small class="text-danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+          Valid email is required
+        </small>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">PASSWORD</label>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="••••••••"
+            formControlName="password"
+          />
+          <small class="text-danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+            Password is required
+          </small>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">CONFIRM</label>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="••••••••"
+            formControlName="confirmPassword"
+          />
+          <small class="text-danger" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
+            Confirm password is required
+          </small>
+        </div>
+      </div>
+
+      <div class="form-check mb-4">
+        <input class="form-check-input" type="checkbox" id="terms" checked />
+        <label class="form-check-label" for="terms">
+          I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </label>
+      </div>
+
+      <button class="btn btn-primary w-100 register-btn" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Creating account...' : 'Create Account' }}
+        <i class="bi bi-arrow-right ms-2"></i>
+      </button>
+    </form>
+
+    <div class="divider"></div>
+
+    <p class="auth-switch">
+      Already have an account?
+      <a routerLink="/auth/login">Log in</a>
+    </p>
+
+    <div class="security">
+      <span><i class="bi bi-shield-lock-fill"></i> Bank-Level Security</span>
+      <span>•</span>
+      <span><i class="bi bi-shield-check"></i> 256-bit SSL</span>
+    </div>
+  </div>
+</div>

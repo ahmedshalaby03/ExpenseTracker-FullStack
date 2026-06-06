@@ -1,0 +1,189 @@
+/* =============================================
+   EXPENSEFLOW — GLASS UI — register.css
+   ============================================= */
+
+.register-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(52, 211, 153, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 15% 85%, rgba(99, 179, 255, 0.07) 0%, transparent 35%),
+    var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 560px;
+  background: rgba(10, 18, 35, 0.85);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(52, 211, 153, 0.04);
+  padding: 48px;
+  backdrop-filter: blur(20px);
+  animation: cardIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.logo-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  color: var(--accent-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 20px;
+  box-shadow: 0 0 24px rgba(52, 211, 153, 0.2);
+}
+
+h2 {
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  font-size: 14px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 7px;
+}
+
+.form-control {
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  width: 100%;
+  padding: 0 14px;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.04);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.1);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.form-control::placeholder { color: var(--text-muted); }
+
+.form-check-label {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.form-check-label a {
+  color: var(--accent-2);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.form-check-input {
+  border-color: var(--glass-border);
+  background-color: rgba(255,255,255,0.05);
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: var(--accent-2);
+  border-color: var(--accent-2);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+.register-btn {
+  height: 52px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-family: var(--font-body);
+  font-size: 15px;
+  background: linear-gradient(135deg, #059669, var(--accent-2));
+  border: none;
+  color: white;
+  width: 100%;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 6px 24px rgba(52, 211, 153, 0.3);
+  letter-spacing: 0.3px;
+  margin-top: 4px;
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(52, 211, 153, 0.4);
+}
+
+.register-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.divider {
+  height: 1px;
+  background: var(--glass-border);
+  margin: 28px 0 20px;
+}
+
+.auth-switch {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-switch a:hover { filter: drop-shadow(0 0 6px var(--accent-glow)); }
+
+.security {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.security i { color: var(--accent-2); filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.4)); }
+
+.text-danger { color: var(--accent-3) !important; font-size: 12px; }
+
+.alert-danger {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: var(--radius-sm);
+  color: #fca5a5;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 600px) {
+  .register-card { padding: 32px 20px; }
+}
