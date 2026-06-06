@@ -272,7 +272,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 <div align="center">
 
-**Built with ❤️ using Angular & ASP.NET Core**
+**Built with Ahmed Saeed Shalaby using Angular & ASP.NET Core**
 
 *If this project helped you, give it a ⭐ — it means a lot!*
 
