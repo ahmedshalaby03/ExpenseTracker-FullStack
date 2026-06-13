@@ -1,5 +1,7 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
-@import "bootstrap-icons/font/bootstrap-icons.css";
+/* =============================================
+   EXPENSEFLOW — GLASS UI — main-layout.css
+   ============================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 :root {
@@ -18,164 +20,481 @@
   --text-muted: rgba(232, 240, 254, 0.3);
   --font-display: 'Syne', sans-serif;
   --font-body: 'DM Sans', sans-serif;
+  --sidebar-w: 240px;
   --radius: 16px;
   --radius-sm: 10px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Bootstrap overrides ── */
-.table {
-  --bs-table-bg: transparent !important;
-  --bs-table-color: var(--text-secondary) !important;
-  --bs-table-border-color: rgba(255, 255, 255, 0.05) !important;
-  --bs-table-hover-bg: rgba(255, 255, 255, 0.04) !important;
-  color: var(--text-secondary) !important;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-
-.table > :not(caption) > * > * {
-  background-color: transparent !important;
-  color: var(--text-secondary) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-.table thead th {
-  background: rgba(0, 0, 0, 0.3) !important;
-  color: var(--text-muted) !important;
-}
-
-.form-control,
-.form-select {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  border-color: var(--glass-border) !important;
-  color: var(--text-primary) !important;
-}
-
-.form-control:focus,
-.form-select:focus {
-  background-color: rgba(99, 179, 255, 0.05) !important;
-  border-color: rgba(99, 179, 255, 0.4) !important;
-  box-shadow: 0 0 0 3px rgba(99, 179, 255, 0.1) !important;
-  color: var(--text-primary) !important;
-}
-
-.form-control::placeholder { color: var(--text-muted) !important; }
-
-.form-select option {
-  background: #0d1b35;
-  color: var(--text-primary);
-}
-
-.input-group-text {
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  border-color: var(--glass-border) !important;
-  color: var(--text-muted) !important;
-}
-
-.form-check-input {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: var(--glass-border) !important;
-}
-
-.form-check-input:checked {
-  background-color: var(--accent) !important;
-  border-color: var(--accent) !important;
-}
-
-.modal-content {
-  background: #0d1b35 !important;
-  border-color: var(--glass-border) !important;
-  color: var(--text-primary) !important;
-}
-
-.progress {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-}
-
-.text-muted { color: var(--text-muted) !important; }
-
-
-* { box-sizing: border-box; }
 
 body {
   font-family: var(--font-body);
   background: var(--bg-base);
   color: var(--text-primary);
-  margin: 0;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ── Background orbs ── */
+.app-layout::before,
+.app-layout::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
 }
 
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+.app-layout::before {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(99, 179, 255, 0.08) 0%, transparent 70%);
+  top: -200px;
+  left: 100px;
+  animation: orbFloat 12s ease-in-out infinite;
 }
 
+.app-layout::after {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.06) 0%, transparent 70%);
+  bottom: -100px;
+  right: 100px;
+  animation: orbFloat 15s ease-in-out infinite reverse;
+}
 
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
 
-
-/* =============================================
-   EXPENSEFLOW — PERFECT SIDEBAR & MAIN AREA FIX
-   ============================================= */
-
-/* الحاوية الأب الكبرى للموقع */
+/* ── Layout ── */
 .app-layout {
-  display: flex !important; /* نضمن تشغيل الفليكس */
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background-color: var(--bg-base);
+  min-height: 100vh;
+  display: flex;
+  background: var(--bg-base);
   position: relative;
 }
 
-/* الـ Sidebar — تأكدنا من تثبيته وحجز مكانه */
+/* ── Sidebar ── */
 .sidebar {
-  width: 260px !important;
-  min-width: 260px !important;
-  max-width: 260px !important;
-  height: 100vh;
-  background: var(--bg-deep);
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: rgba(5, 10, 20, 0.8);
   border-right: 1px solid var(--glass-border);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 24px 16px;
-  box-sizing: border-box;
-  z-index: 10;
-}
-
-.main-area {
-  margin-left: 260px !important; /* بيزق الـ content كله برة منطقة السايدبار تماماً */
-  width: calc(100% - 260px) !important; /* بيضمن إن العرض ميزيدش عن المساحة المتبقية */
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+  animation: slideInLeft 0.5s var(--transition) both;
 }
 
-/* الـ Topbar */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding: 0 6px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), #3b82f6);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.brand h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.brand span {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── Nav ── */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-link {
+  height: 46px;
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--glass-hover);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.nav-link:hover::before { opacity: 1; }
+.nav-link:hover { color: var(--text-primary); }
+
+.nav-link i {
+  font-size: 17px;
+  min-width: 17px;
+  transition: var(--transition);
+}
+
+.nav-link:hover i {
+  color: var(--accent);
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+}
+
+.nav-link.active {
+  background: var(--glass-active);
+  color: var(--accent);
+  border: 1px solid rgba(99, 179, 255, 0.2);
+  font-weight: 600;
+}
+
+.nav-link.active i {
+  color: var(--accent);
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--accent);
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ── Logout ── */
+.logout-btn {
+  margin-top: auto;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.2);
+  color: var(--accent-3);
+}
+
+/* ── Main area ── */
+.main-area {
+  margin-left: var(--sidebar-w);
+  width: calc(100% - var(--sidebar-w));
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Topbar ── */
 .topbar {
-  height: 70px;
+  height: 68px;
+  background: rgba(5, 10, 20, 0.7);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(7, 13, 26, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
-  flex-shrink: 0;
-  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  animation: fadeDown 0.4s var(--transition) both;
 }
 
-/* مساحة عرض المحتوى (الـ Dashboard) */
-.content-area {
-  flex: 1;
-  padding: 28px !important;
-  overflow-y: auto; /* السكرول هنا بس لو الصفحة طويلة */
-  box-sizing: border-box;
+@keyframes fadeDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* الـ left side بتاع الـ topbar (hamburger + title) */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.page-title span {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-box {
+  width: 280px;
+  height: 38px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.search-box:focus-within {
+  border-color: rgba(99, 179, 255, 0.3);
+  background: rgba(99, 179, 255, 0.05);
+  box-shadow: 0 0 0 3px rgba(99, 179, 255, 0.08);
+}
+
+.search-box i { color: var(--text-muted); font-size: 13px; }
+
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
   width: 100%;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+.search-box input::placeholder { color: var(--text-muted); }
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 15px;
+}
+
+.icon-btn:hover {
+  background: var(--glass-hover);
+  color: var(--accent);
+  border-color: rgba(99, 179, 255, 0.3);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* ── Hamburger ── */
+.hamburger-btn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-secondary);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 18px;
+}
+
+.hamburger-btn:hover {
+  background: var(--glass-hover);
+  color: var(--accent);
+  border-color: rgba(99, 179, 255, 0.3);
+}
+
+/* ── Overlay ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease both;
+}
+
+.sidebar-overlay.visible {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Avatar ── */
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #63b3ff;
+  color: #050a14;
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.user-avatar:hover {
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: scale(1.05);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Content ── */
+.content-area {
+  padding: 28px;
+  animation: fadeUp 0.5s var(--transition) 0.1s both;
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* =============================================
+   RESPONSIVE
+   — كل اللي تحت desktop (tablet + mobile) بيشتغل كـ drawer
+   ============================================= */
+
+@media (max-width: 900px) {
+  /* sidebar مش واخد أي مساحة من الـ layout */
+  :root { --sidebar-w: 0px; }
+
+  /* الـ main يملأ الشاشة كلها من أول وجديد */
+  .main-area {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* السايدبار drawer — خارج الـ flow تماماً */
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+    animation: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 24px 16px;
+    /* نتأكد إن النصوص شايفة جوه الـ drawer */
+  }
+
+  /* reset أي overrides من الـ collapsed mode */
+  .brand div:last-child,
+  .nav-link span,
+  .logout-btn span { display: block; }
+
+  .brand { justify-content: flex-start; }
+  .nav-link, .logout-btn { justify-content: flex-start; padding: 0 14px; }
+
+  /* لما الـ drawer يتفتح */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* الـ overlay يظهر */
+  .sidebar-overlay.visible { display: block; }
+
+  /* الهامبرجر يظهر */
+  .hamburger-btn { display: flex; }
+
+  .topbar { padding: 0 16px; }
+  .search-box { display: none; }
+  .content-area { padding: 18px; }
+}
+
+/* ── Mobile فقط — تعديلات حجم ── */
+@media (max-width: 576px) {
+  .sidebar { width: 240px; }
+
+  .topbar { height: 58px; padding: 0 12px; }
+  .page-title h2 { font-size: 16px; }
+  .page-title span { display: none; }
+  .topbar-actions { gap: 6px; }
+  .icon-btn { width: 32px; height: 32px; font-size: 13px; }
+  .user-avatar { width: 32px; height: 32px; font-size: 13px; }
+  .content-area { padding: 12px; }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, of } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 import { ProfileService } from '../../core/services/profile';
 import { Profile } from '../../core/models/profile.models';
 
@@ -19,8 +19,7 @@ export class ProfileComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   profile: Profile | null = null;
-apiBaseUrl = 'https://localhost:7092';
-  isLoading = false;
+  apiBaseUrl = environment.apiUrl.replace('/api', '');  isLoading = false;
   isSavingProfile = false;
   isSavingPreferences = false;
   isChangingPassword = false;

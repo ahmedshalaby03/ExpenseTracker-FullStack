@@ -1,12 +1,21 @@
 <div class="app-layout">
-  <aside class="sidebar">
+
+  <!-- ── Overlay (موبايل فقط) ── -->
+  <div
+    class="sidebar-overlay"
+    [class.visible]="sidebarOpen"
+    (click)="closeSidebar()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
     <div class="brand">
       <div class="brand-icon">
         <i class="bi bi-wallet2"></i>
       </div>
-
       <div>
-        <h4>ExpenseFlow</h4>
+        <h4>Expense Tracker</h4>
         <span>Financial Management</span>
       </div>
     </div>
@@ -16,6 +25,7 @@
         routerLink="/dashboard"
         routerLinkActive="active"
         class="nav-link"
+        (click)="closeSidebar()"
       >
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
@@ -25,6 +35,7 @@
         routerLink="/transactions"
         routerLinkActive="active"
         class="nav-link"
+        (click)="closeSidebar()"
       >
         <i class="bi bi-receipt"></i>
         <span>Transactions</span>
@@ -34,6 +45,7 @@
         routerLink="/categories"
         routerLinkActive="active"
         class="nav-link"
+        (click)="closeSidebar()"
       >
         <i class="bi bi-ui-checks-grid"></i>
         <span>Categories</span>
@@ -43,6 +55,7 @@
         routerLink="/reports"
         routerLinkActive="active"
         class="nav-link"
+        (click)="closeSidebar()"
       >
         <i class="bi bi-bar-chart-fill"></i>
         <span>Reports</span>
@@ -52,6 +65,7 @@
         routerLink="/profile"
         routerLinkActive="active"
         class="nav-link"
+        (click)="closeSidebar()"
       >
         <i class="bi bi-gear"></i>
         <span>Settings</span>
@@ -64,11 +78,27 @@
     </button>
   </aside>
 
+  <!-- ── Main Area ── -->
   <main class="main-area">
+
+    <!-- ── Topbar ── -->
     <header class="topbar">
-      <div class="page-title">
-        <h2>ExpenseFlow</h2>
-        <span>Manage your money smarter</span>
+      <div class="topbar-left">
+        <!-- Hamburger — بيظهر بس على موبايل -->
+        <button
+          class="hamburger-btn"
+          type="button"
+          (click)="toggleSidebar()"
+          [attr.aria-expanded]="sidebarOpen"
+          aria-label="Toggle navigation"
+        >
+          <i class="bi" [class.bi-list]="!sidebarOpen" [class.bi-x-lg]="sidebarOpen"></i>
+        </button>
+
+        <div class="page-title">
+          <h2>Expense Tracker</h2>
+          <span>Manage your money smarter</span>
+        </div>
       </div>
 
       <div class="topbar-actions">
@@ -77,11 +107,11 @@
           <input type="text" placeholder="Search..." />
         </div>
 
-        <button class="icon-btn" type="button">
+        <button class="icon-btn" type="button" aria-label="Notifications">
           <i class="bi bi-bell"></i>
         </button>
 
-        <button class="icon-btn" type="button">
+        <button class="icon-btn" type="button" aria-label="Help">
           <i class="bi bi-question-circle"></i>
         </button>
 
@@ -99,8 +129,10 @@
       </div>
     </header>
 
+    <!-- ── Page Content ── -->
     <section class="content-area">
       <router-outlet></router-outlet>
     </section>
+
   </main>
 </div>

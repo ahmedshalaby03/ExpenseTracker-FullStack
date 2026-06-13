@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AuthService } from '../../../core/services/auth';
-
+  
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -16,6 +16,8 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+
 
   isLoading = false;
   errorMessages: string[] = [];
@@ -67,6 +69,8 @@ export class RegisterComponent {
         } else {
           this.errorMessages = ['Registration failed'];
         }
+
+        this.cdr.detectChanges();
       }
     });
   }

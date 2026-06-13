@@ -1,6 +1,8 @@
 using ExpenseTracker.Api.Services;
 using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Infrastructure;
+using ExpenseTracker.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 namespace ExpenseTracker
@@ -52,27 +54,39 @@ namespace ExpenseTracker
             {
                 options.AddPolicy("AllowAngular", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    policy.WithOrigins(
+                            "http://localhost:4200",
+                            "http://expense-track.runasp.net",
+                             "https://expense-track.runasp.net"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
 
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            if (app.Environment.IsProduction())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                using (var scope = app.Services.CreateScope())
+                {
+                    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    db.Database.Migrate();
+                }
             }
 
-           
+            //app.UseHttpsRedirection();
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseCors("AllowAngular");
+
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors("AllowAngular");
+
             app.MapControllers();
 
             app.Run();

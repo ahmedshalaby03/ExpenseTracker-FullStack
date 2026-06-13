@@ -1,10 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth';
 import { TokenService } from '../../core/services/token';
 import { ProfileService } from '../../core/services/profile';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-main-layout',
@@ -18,19 +20,36 @@ export class MainLayoutComponent implements OnInit {
   private tokenService = inject(TokenService);
   private profileService = inject(ProfileService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   currentUser = this.tokenService.getUser();
   avatarUrl: string | null = null;
+  sidebarOpen = false;
 
- ngOnInit(): void {
-  this.profileService.getProfile().subscribe({
-    next: (profile) => {
-      this.avatarUrl = profile.avatarUrl 
-        ? `${environment.apiUrl.replace('/api', '')}/${profile.avatarUrl}`
-        : null;
-    }
-  });
-}
+  ngOnInit(): void {
+    this.profileService.getProfile().subscribe({
+      next: (profile) => {
+        this.avatarUrl = profile.avatarUrl
+          ? `${environment.apiUrl.replace('/api', '')}/${profile.avatarUrl}`
+          : null;
+          this.cdr.detectChanges();
+      }
+    });
+  }
+
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen = false;
+  }
+
+  // لما المستخدم يضغط Escape يقفل السايدبار
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.sidebarOpen = false;
+  }
 
   logout(): void {
     this.authService.logout();

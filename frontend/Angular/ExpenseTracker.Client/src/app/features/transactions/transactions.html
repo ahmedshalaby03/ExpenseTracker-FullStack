@@ -165,15 +165,16 @@
 
         <tbody>
           <tr *ngFor="let transaction of transactions">
-            <td>{{ transaction.transactionDate | date:'MMM d, y' }}</td>
+            <td data-label="Date">{{ transaction.transactionDate | date:'MMM d, y' }}</td>
 
-            <td>{{ transaction.description || '-' }}</td>
+            <td data-label="Description">{{ transaction.description || '-' }}</td>
 
-            <td>
+            <td data-label="Category">
               <span class="category-pill">{{ transaction.categoryName }}</span>
             </td>
 
-            <td>
+
+            <td data-label="Type">
               <span
                 class="type-badge"
                 [class.income]="transaction.type === 1"
@@ -183,9 +184,9 @@
               </span>
             </td>
 
-            <td>{{ getPaymentMethodName(transaction.paymentMethod) }}</td>
+            <td data-label="Payment">{{ getPaymentMethodName(transaction.paymentMethod) }}</td>
 
-            <td
+            <td data-label="Amount"
               class="amount"
               [class.amount-income]="transaction.type === 1"
               [class.amount-expense]="transaction.type === 2"
@@ -194,7 +195,7 @@
               {{ transaction.amount | currency:'EGP':'symbol':'1.0-0' }}
             </td>
 
-            <td>
+            <td data-label="Actions">
               <button class="action-btn" type="button" (click)="edit(transaction)">
                 <i class="bi bi-pencil"></i>
               </button>

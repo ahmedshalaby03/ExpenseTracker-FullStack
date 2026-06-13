@@ -27,6 +27,7 @@ export class CategoriesComponent implements OnInit {
 
   selectedCategoryId: number | null = null;
   searchTerm = '';
+  showForm = false;
 
   categoryForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -131,6 +132,7 @@ export class CategoriesComponent implements OnInit {
 
   edit(category: Category): void {
     this.selectedCategoryId = category.id;
+    this.showForm = true;
 
     this.categoryForm.patchValue({
       name: category.name,
@@ -156,6 +158,7 @@ export class CategoriesComponent implements OnInit {
 
   resetForm(): void {
     this.selectedCategoryId = null;
+    this.showForm = false;
 
     this.categoryForm.reset({
       name: '',

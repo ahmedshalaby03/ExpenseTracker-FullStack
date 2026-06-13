@@ -183,12 +183,30 @@
   align-items: end;
 }
 
-/* ── Table ── */
-.table { margin: 0; width: 100%; border-collapse: collapse; }
+/* ── Table — Bootstrap override ── */
+.table-card .table {
+  margin: 0;
+  width: 100%;
+  border-collapse: collapse;
+  /* إلغاء الـ Bootstrap white background */
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+  --bs-table-color: var(--text-secondary);
+  --bs-table-border-color: rgba(255, 255, 255, 0.05);
+}
 
-.table thead th {
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--text-muted);
+.table-card .table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 16px 12px;
+  font-size: 13px;
+}
+
+.table-card .table thead th {
+  background: rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-muted) !important;
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 700;
@@ -197,15 +215,18 @@
   border-bottom: 1px solid var(--glass-border);
 }
 
-.table td {
-  padding: 16px 12px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+.table-card .table tbody tr {
+  transition: var(--transition);
 }
 
-.table tbody tr { transition: var(--transition); }
-.table tbody tr:hover { background: var(--glass); }
+.table-card .table tbody tr:hover > * {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: var(--text-primary);
+}
+
+.table-card .table tbody tr:last-child > * {
+  border-bottom: none;
+}
 
 .category-pill {
   background: rgba(255, 255, 255, 0.07);
@@ -353,6 +374,46 @@
 @media (max-width: 700px) {
   .form-grid, .filter-grid { grid-template-columns: 1fr; }
   .page-header { flex-direction: column; align-items: stretch; gap: 14px; }
-  .table { min-width: 700px; }
+  .table-card .table { min-width: 700px; }
   .table-responsive { overflow-x: auto; }
+}
+
+
+
+@media (max-width: 700px) {
+  /* نخبي الـ table header */
+  .table-card .table thead { display: none; }
+
+  /* كل row يبقى card */
+  .table-card .table tbody tr {
+    display: block;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* كل cell تبقى row جوه الـ card */
+  .table-card .table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: 13px;
+  }
+
+  /* نضيف label قبل كل قيمة */
+  .table-card .table tbody td::before {
+    content: attr(data-label);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .table-card .table { min-width: unset; }
+  .table-card .table-responsive { overflow-x: unset; }
 }

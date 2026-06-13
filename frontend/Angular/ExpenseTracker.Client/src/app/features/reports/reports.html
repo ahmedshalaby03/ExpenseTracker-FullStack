@@ -177,13 +177,13 @@
 
           <tbody>
             <tr *ngFor="let item of categoryBreakdown">
-              <td>
+              <td data-label="Category">
                 <strong>{{ item.categoryName }}</strong>
               </td>
 
-              <td>{{ item.totalSpent | currency:'EGP':'symbol':'1.0-0' }}</td>
+              <td data-label="Total Spent">{{ item.totalSpent | currency:'EGP':'symbol':'1.0-0' }}</td>
 
-              <td>
+              <td data-label="Percentage">
                 <div class="percentage-cell">
                   <div class="progress">
                     <div class="progress-bar" [style.width.%]="item.percentage"></div>
@@ -192,12 +192,12 @@
                 </div>
               </td>
 
-              <td>
+              <td data-label="Transactions">
                 {{ item.transactionsCount }}
                 {{ item.transactionsCount === 1 ? 'transaction' : 'transactions' }}
               </td>
 
-              <td>
+              <td data-label="Trend">
                 <span class="trend-up">↗ +{{ item.percentage }}%</span>
               </td>
             </tr>

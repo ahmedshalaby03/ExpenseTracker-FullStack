@@ -114,6 +114,7 @@ body {
 .brand-icon {
   width: 38px;
   height: 38px;
+  min-width: 38px;
   border-radius: 10px;
   background: linear-gradient(135deg, var(--accent), #3b82f6);
   color: white;
@@ -177,6 +178,7 @@ body {
 
 .nav-link i {
   font-size: 17px;
+  min-width: 17px;
   transition: var(--transition);
 }
 
@@ -267,6 +269,13 @@ body {
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* الـ left side بتاع الـ topbar (hamburger + title) */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .page-title h2 {
   margin: 0;
   font-family: var(--font-display);
@@ -343,12 +352,57 @@ body {
   box-shadow: 0 0 12px var(--accent-glow);
 }
 
+/* ── Hamburger ── */
+.hamburger-btn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-secondary);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 18px;
+}
+
+.hamburger-btn:hover {
+  background: var(--glass-hover);
+  color: var(--accent);
+  border-color: rgba(99, 179, 255, 0.3);
+}
+
+/* ── Overlay ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease both;
+}
+
+.sidebar-overlay.visible {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Avatar ── */
 .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #63b3ff; /* نديله لون الأكسنت الأزرق بتاعك عشان ينور */
-  color: #050a14; /* لون الحرف غامق عشان يبان */
+  background: #63b3ff;
+  color: #050a14;
   font-weight: bold;
   font-size: 16px;
   display: flex;
@@ -356,24 +410,19 @@ body {
   justify-content: center;
   overflow: hidden;
   border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-.avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* بيخلي الصورة تملأ الدائرة من غير ما تتبطط */
-  display: block;
-}
 .user-avatar:hover {
   box-shadow: 0 0 20px var(--accent-glow);
   transform: scale(1.05);
 }
 
-.user-avatar img {
+.avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
   display: block;
 }
 
@@ -388,34 +437,62 @@ body {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  :root { --sidebar-w: 72px; }
+/* =============================================
+   RESPONSIVE
+   — كل اللي تحت desktop (tablet + mobile) بيشتغل كـ drawer
+   ============================================= */
 
-  .sidebar { padding: 18px 10px; }
+@media (max-width: 1185px) {
+  :root { --sidebar-w: 0px; }
 
+  .main-area {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* السايدبار drawer — خارج الـ flow تماماً */
+  .sidebar {
+    width: 50%;
+    transform: translateX(-100%);
+    animation: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 24px 16px;
+    /* نتأكد إن النصوص شايفة جوه الـ drawer */
+  }
+
+  /* reset أي overrides من الـ collapsed mode */
   .brand div:last-child,
   .nav-link span,
-  .logout-btn span { display: none; }
+  .logout-btn span { display: block; }
 
-  .brand { justify-content: center; }
-  .nav-link, .logout-btn { justify-content: center; padding: 0; }
+  .brand { justify-content: flex-start; }
+  .nav-link, .logout-btn { justify-content: flex-start; padding: 0 14px; }
+
+  /* لما الـ drawer يتفتح */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* الـ overlay يظهر */
+  .sidebar-overlay.visible { display: block; }
+
+  /* الهامبرجر يظهر */
+  .hamburger-btn { display: flex; }
 
   .topbar { padding: 0 16px; }
   .search-box { display: none; }
   .content-area { padding: 18px; }
 }
 
+/* ── Mobile فقط — تعديلات حجم ── */
 @media (max-width: 576px) {
-  :root { --sidebar-w: 60px; }
+  .sidebar { width: 90%; }
 
-  .brand-icon { width: 32px; height: 32px; font-size: 16px; }
-  .nav-link, .logout-btn { height: 42px; }
   .topbar { height: 58px; padding: 0 12px; }
   .page-title h2 { font-size: 16px; }
   .page-title span { display: none; }
   .topbar-actions { gap: 6px; }
   .icon-btn { width: 32px; height: 32px; font-size: 13px; }
-  .user-avatar { width: 32px; height: 32px; }
+  .user-avatar { width: 32px; height: 32px; font-size: 13px; }
   .content-area { padding: 12px; }
 }

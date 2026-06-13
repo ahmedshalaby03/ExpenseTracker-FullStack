@@ -50,12 +50,23 @@
 /* ── Summary grid المطور ── */
 .summary-grid {
   display: grid;
-  /* الكروت هترتب نفسها تلقائياً وتصغر وتكبر حسب مساحة الشاشة والـ Sidebar */
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
   width: 100%;
   box-sizing: border-box;
 }
+@media (max-width: 1437px) {
+  .summary-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 892px) {
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .summary-grid { grid-template-columns: 1fr; }
+}
+
 
 .summary-card {
   background: var(--glass);
@@ -428,6 +439,102 @@
 /* ── Responsive المطور ── */
 @media (max-width: 1024px) {
   .dashboard-grid { 
-    grid-template-columns: 1fr; /* يخلي الـ Charts والـ Sidebar تحت بعض في الشاشات الصغيرة والمتوسطة */
+    grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 900px) {
+  .recent-card .table thead th:nth-child(5), 
+  .recent-card .table td:nth-child(5) {
+    display: none;
+  }
+
+  .recent-card .table { min-width: unset; }
+  .recent-card .table-responsive { overflow-x: unset; }
+}
+
+/* ضيف ده في آخر dashboard.css */
+
+@media (max-width: 700px) {
+  .recent-card .table thead { display: none; }
+
+  .recent-card .table tbody tr {
+    display: block;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+
+  .recent-card .table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border: none;
+    font-size: 13px;
+  }
+
+  .recent-card .table tbody td::before {
+    content: attr(data-label);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .recent-card .table { min-width: unset; }
+  .recent-card .table-responsive { overflow-x: unset; }
+}
+
+
+/* ==============================================
+   TABLE FIX — إلغاء Bootstrap white background
+   ============================================== */
+
+/* Bootstrap بيحط --bs-table-bg على كل tr وده بيطغى على أي شيء تاني */
+.recent-card .table {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04);
+  --bs-table-color: var(--text-secondary);
+  --bs-table-border-color: rgba(255, 255, 255, 0.05);
+  margin: 0;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.recent-card .table thead th {
+  background: rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* الخطوة المهمة — نلغي الـ bs-table-bg على كل cell */
+.recent-card .table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 16px 12px;
+  font-size: 13px;
+}
+
+.recent-card .table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.recent-card .table tbody tr:hover > * {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  color: var(--text-primary);
+}
+
+.recent-card .table tbody tr:last-child > * {
+  border-bottom: none;
 }

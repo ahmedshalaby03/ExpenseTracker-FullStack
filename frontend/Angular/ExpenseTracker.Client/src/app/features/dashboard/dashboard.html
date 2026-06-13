@@ -162,9 +162,9 @@
 
           <tbody>
             <tr *ngFor="let transaction of recentTransactions">
-              <td>{{ transaction.transactionDate | date:'MMM d, y' }}</td>
-              <td>{{ transaction.categoryName }}</td>
-              <td>
+              <td data-label="Date">{{ transaction.transactionDate | date:'MMM d, y' }}</td>
+              <td data-label="Category">{{ transaction.categoryName }}</td>
+              <td data-label="Type">
                 <span
                   class="type-badge"
                   [class.income-badge]="transaction.type === 1"
@@ -173,14 +173,14 @@
                   {{ getTransactionType(transaction.type) }}
                 </span>
               </td>
-              <td
+              <td data-label="Amount"
                 [class.amount-income]="transaction.type === 1"
                 [class.amount-expense]="transaction.type === 2"
               >
                 {{ transaction.type === 1 ? '+' : '-' }}
                 {{ transaction.amount | currency:'EGP':'symbol':'1.0-0' }}
               </td>
-              <td>{{ getPaymentMethod(transaction.paymentMethod) }}</td>
+              <td data-label="Payment">{{ getPaymentMethod(transaction.paymentMethod) }}</td>
             </tr>
 
             <tr *ngIf="recentTransactions.length === 0">

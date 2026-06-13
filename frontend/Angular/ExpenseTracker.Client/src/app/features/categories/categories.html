@@ -5,7 +5,7 @@
       <p>Organize and track your financial buckets</p>
     </div>
 
-    <button class="btn btn-primary" type="button" (click)="resetForm()">
+    <button class="btn btn-primary" type="button" (click)="showForm = true">
       <i class="bi bi-plus-lg me-2"></i>
       Add Category
     </button>
@@ -43,8 +43,8 @@
     {{ successMessage }}
   </div>
 
-  <div class="content-grid">
-    <div class="form-card">
+  <div class="content-grid" [class.with-form]="showForm">
+    <div class="form-card" *ngIf="showForm">
       <h3>{{ selectedCategoryId ? 'Edit Category' : 'New Category' }}</h3>
 
       <form [formGroup]="categoryForm" (ngSubmit)="submit()">
@@ -142,7 +142,7 @@
 
           <tbody>
             <tr *ngFor="let category of categories">
-              <td>
+              <td data-label="Category">
                 <div class="category-info">
                   <div
                     class="category-icon"
@@ -155,7 +155,7 @@
                 </div>
               </td>
 
-              <td>
+              <td data-label="Type">
                 <span
                   class="type-badge"
                   [class.income]="category.type === 1"
@@ -165,16 +165,16 @@
                 </span>
               </td>
 
-              <td>
+              <td data-label="Usage">
                 {{ category.transactionsCount }}
                 {{ category.transactionsCount === 1 ? 'transaction' : 'transactions' }}
               </td>
 
-              <td>
+              <td data-label="Total">
                 <strong>{{ category.totalAmount | currency:'EGP':'symbol':'1.0-0' }}</strong>
               </td>
-
-              <td>
+              
+              <td data-label="Actions">
                 
                 <button class="action-btn" type="button" (click)="edit(category); $event.stopPropagation()">
                 <i class="bi bi-pencil"></i>
