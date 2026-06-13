@@ -549,9 +549,7 @@ ng build --configuration production
 
 * Add password reset by email
 * Add recurring transactions
-* Add export reports as PDF/Excel
 * Add budget alerts
-* Add charts for advanced analytics
 * Add multi-currency support
 * Add admin dashboard
 
