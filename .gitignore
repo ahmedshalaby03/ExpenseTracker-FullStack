@@ -32,6 +32,9 @@ appsettings.Local.json
 appsettings.Production.json
 appsettings.json
 
+# Uploaded user files
+**/wwwroot/uploads/
+
 # Logs
 logs/
 *.log
